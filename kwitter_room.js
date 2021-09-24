@@ -1,4 +1,3 @@
-
 var firebaseConfig = {
       apiKey: "AIzaSyB8E4rciN76w_sIsoiRd0-8yp0YgQPO46k",
       authDomain: "kwitter-12536.firebaseapp.com",
@@ -9,26 +8,42 @@ var firebaseConfig = {
       appId: "1:266532523383:web:0a5a435456eeb7aebfe572",
       measurementId: "G-61D2ZCR0BD"
 };
-firebase.initalizeApp(firebaseConfig);
 
-user_name = localStorage.getItem("username");
-document.getElementById("welcome_user_name").innerHTML = "welcome" + user_name + "|";
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+
+user_name = localStorage.getItem("user_name");
+document.getElementById("user_name").innerHTML = "welcome " + user_name + "!";
 function addRoom() {
       room_name = document.getElementById("room_name").value;
-      localStorage.setItem("Roomname", room_name);
-      window.location = "kwitter_page.html";
       firebase.database().ref("/").child(room_name).update({
             purpose: "adding room name"
 
-      })
-}
+      });
+      localStorage.setItem("room_name", room_name);
+      window.location = "kwitter_page.html";
 
+
+}
 function getData() {
       firebase.database().ref("/").on('value', function (snapshot) {
             document.getElementById("output").innerHTML = ""; snapshot.forEach(function (childSnapshot) {
+                  childKey = childSnapshot.key;
+                  Room_names = childKey;
+                  console.log("Room Name :" + Room_names);
+                  row = "<div class='room_name' id = " + Room_names + "onclick = 'redirecttoroomname(this.id)'>#" + Room_names + "</div> <hr>";
+                  document.getElementById("output").innerHTML += row;
 
 
             });
       });
 }
 getData();
+
+function redirecttoroomname(Name) {
+      console.log(Name);
+      localStorage.setItem("room_name", Name);
+      window.location = "kwitter_page.html";
+}
+
